@@ -1,0 +1,28 @@
+services:
+  nestjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: postgres://oluwatomisin:testdb@database:5432/test
+
+  database:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: oluwatomisin
+      POSTGRES_PASSWORD: testdb
+    ports:
+      - '5439:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
+networks:
+  default:
+    driver: bridge  
