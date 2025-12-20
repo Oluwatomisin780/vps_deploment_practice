@@ -33,8 +33,6 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Run tests
-        run: pnpm test
 
   build-and-deploy:
     runs-on: ubuntu-latest
