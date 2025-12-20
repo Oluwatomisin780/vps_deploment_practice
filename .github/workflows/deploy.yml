@@ -75,8 +75,6 @@ jobs:
           context: .
           pull: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.APP_NAME }}:latest
-          cache-from: type=registry
-          cache-to: type=inline, mode=max
           build-args: NODE_ENV=production
 
       - name: Deploy to Server via SSH
