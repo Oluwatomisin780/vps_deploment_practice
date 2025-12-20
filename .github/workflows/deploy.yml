@@ -11,31 +11,30 @@ env:
 
 jobs:
   tests:
+    env:
+      TZ: Europe/Berlin
     runs-on: ubuntu-latest
-    name: Run Tests
+    name: Tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "23"
 
-      - name: Install pnpm
+      - name: install pnpm
         run: npm install -g pnpm
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run Prisma generate
-        run: pnpm prisma generate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
-
   build-and-deploy:
     runs-on: ubuntu-latest
+    name: Build & Deploy
     needs: tests
     if: github.ref == 'refs/heads/main'
     steps:
@@ -47,16 +46,16 @@ jobs:
         with:
           node-version: "23"
 
-      - name: Install pnpm
+      - name: install pnpm
         run: npm install -g pnpm
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run Prisma generate
+      - name: Run prisma generate
         run: pnpm prisma generate
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
 
       - name: Build application
         run: pnpm run build
@@ -67,27 +66,27 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          username: ${{secrets.DOCKER_HUB_USERNAME}}
+          password: ${{secrets.DOCKER_HUB_PASSWORD}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           pull: true
-          push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.APP_NAME }}:latest
-          build-args: |
-            NODE_ENV=production
+          cache-from: type=registry
+          cache-to: type=inline, mode=max
+          build-args: NODE_ENV=production
 
-      - name: Deploy to VPS via SSH
-        uses: appleboy/ssh-action@v1
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_SSH_PORT }}
-          passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
+          host: ${{secrets.SERVER_HOST}}
+          username: ${{secrets.SERVER_USER}}
+          key: ${{secrets.SERVER_SSH_KEY}}
+          port: ${{secrets.SERVER_SSH_PORT}}
+          passphrase: ${{secrets.SERVER_SSH_PASSPHRASE}}
           script: |
             # Create app directory
             mkdir -p /opt/${{ env.APP_NAME }}
@@ -102,7 +101,7 @@ jobs:
 
             # Copy or download docker-compose.yml if it doesn't exist
             if [ ! -f docker-compose.yml ]; then
-              curl -o docker-compose.yml https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO/main/docker-compose.yml
+              curl -o docker-compose.yml https://github.com/Oluwatomisin780/vps_deploment_practice/blob/main/docker-compose.ymlhttps://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO/main/docker-compose.yml
             fi
 
             # Pull latest images, stop old containers, start new ones
