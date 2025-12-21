@@ -15,7 +15,7 @@ import {
   CreateCategoryDto,
   UpdateCategoryDto,
 } from 'src/modules/category/category.type';
-import { PrismaService } from 'src/services/prisma/prisma.service';
+
 
 @Controller('category')
 export class CategoryController {
