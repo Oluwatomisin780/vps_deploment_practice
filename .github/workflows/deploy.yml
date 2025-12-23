@@ -99,7 +99,7 @@ jobs:
 
             # Copy or download docker-compose.yml if it doesn't exist
             if [ ! -f docker-compose.yml ]; then
-              curl -o docker-compose.yml https://github.com/Oluwatomisin780/vps_deploment_practice/blob/main/docker-compose.ymlhttps://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO/main/docker-compose.yml
+              curl -o docker-compose.yml https://raw.githubusercontent.com/Oluwatomisin780/vps_deploment_practice/refs/heads/main/docker-compose.yml
             fi
 
             # Pull latest images, stop old containers, start new ones
