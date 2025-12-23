@@ -1,8 +1,6 @@
 services:
   nestjs-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: oluwatomisin12/task-flows-app:latest
     ports:
       - '3000:3000'
     depends_on:
@@ -25,4 +23,4 @@ volumes:
   db_data:
 networks:
   default:
-    driver: bridge  
+    driver: bridge

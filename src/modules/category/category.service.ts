@@ -6,7 +6,7 @@ import {
 } from 'src/modules/category/category.type';
 import { PrismaService } from 'src/services/prisma/prisma.service';
 
-@Injectable()
+@Injectable()  
 export class CategoryService {
   constructor(private prismaService: PrismaService) {}
 
